@@ -160,7 +160,7 @@
     {
       "type" : "shell",
       "inline" : [
-        "sudo yum -y groupinstall development && sudo yum -y install curl wget jq"
+        "sudo -E yum -y groupinstall development && sudo -E yum -y install curl wget jq"
       ],
       "max_retries" : 5
     },
@@ -176,13 +176,13 @@
         "region=\"{{user `region`}}\"",
         "chef_install_url=\"https://${region}-aws-parallelcluster.s3.${region}.amazonaws.com$([ \"${region}\" != \"${region#cn-*}\" ] && echo \".cn\" || exit 0)/archives/cinc/cinc-install-1.1.0.sh\"",
         "[ -n  \"{{user `chef_custom_install_url`}}\" ] && chef_install_url=\"{{user `chef_custom_install_url`}}\"",
-        "curl --retry 3 -L ${chef_install_url} | sudo bash -s -- -v {{user `chef_version`}}"
+        "curl --retry 3 -L ${chef_install_url} | sudo -E bash -s -- -v {{user `chef_version`}}"
       ]
     },
     {
       "type" : "shell",
       "inline" : [
-        "sudo /opt/cinc/embedded/bin/gem install --no-document berkshelf:{{user `berkshelf_version`}}"
+        "sudo -E /opt/cinc/embedded/bin/gem install --no-document berkshelf:{{user `berkshelf_version`}}"
       ],
       "max_retries": 3
     },
@@ -190,8 +190,8 @@
       "type" : "shell",
       "inline" : [
         "set -x",
-        "sudo /opt/cinc/embedded/bin/berks vendor /etc/chef/cookbooks --berksfile /tmp/cookbook/Berksfile",
-        "sudo chown -R root:root /etc/chef"
+        "sudo -E /opt/cinc/embedded/bin/berks vendor /etc/chef/cookbooks --berksfile /tmp/cookbook/Berksfile",
+        "sudo -E chown -R root:root /etc/chef"
       ]
     },
     {
@@ -201,7 +201,7 @@
         "/etc/chef/cookbooks"
       ],
       "skip_install" : "true",
-      "execute_command" : "sudo cinc-client -z --no-color -c {{.ConfigPath}} -j {{.JsonPath}}",
+      "execute_command" : "sudo -E cinc-client -z --no-color -c {{.ConfigPath}} -j {{.JsonPath}}",
       "json" : {
         "cfncluster" : {
           "default_pre_reboot" : "false"
@@ -216,7 +216,7 @@
       "only": ["alinux2"],
       "expect_disconnect" : "true",
       "inline" : [
-        "sudo reboot"
+        "sudo -E reboot"
       ]
     },
     {
@@ -238,7 +238,7 @@
         "/etc/chef/cookbooks"
       ],
       "skip_install" : "true",
-      "execute_command" : "sudo cinc-client -z --no-color -c {{.ConfigPath}} -j {{.JsonPath}}",
+      "execute_command" : "sudo -E cinc-client -z --no-color -c {{.ConfigPath}} -j {{.JsonPath}}",
       "run_list" : [
         "aws-parallelcluster::default"
       ]
@@ -256,7 +256,7 @@
         }
       },
       "skip_install" : "true",
-      "execute_command" : "sudo cinc-client -z --no-color -c {{.ConfigPath}} -j {{.JsonPath}}",
+      "execute_command" : "sudo -E cinc-client -z --no-color -c {{.ConfigPath}} -j {{.JsonPath}}",
       "run_list" : [
         "aws-parallelcluster::default"
       ]
@@ -271,20 +271,20 @@
       "inline": [
         "set -x",
         "[[ -d \"/tmp/createami_scripts\" ]] && script_name=$(ls /tmp/createami_scripts)",
-        "[[ -n ${script_name} ]] && (sudo chmod +x /tmp/createami_scripts/${script_name} && sudo /tmp/createami_scripts/${script_name} && sudo mkdir -p /opt/parallelcluster/createami_scripts && sudo mv /tmp/createami_scripts/${script_name} /opt/parallelcluster/createami_scripts && sudo chmod 700 /opt/parallelcluster/createami_scripts) || echo 'No post install script'"
+        "[[ -n ${script_name} ]] && (sudo -E chmod +x /tmp/createami_scripts/${script_name} && sudo -E /tmp/createami_scripts/${script_name} && sudo -E mkdir -p /opt/parallelcluster/createami_scripts && sudo mv /tmp/createami_scripts/${script_name} /opt/parallelcluster/createami_scripts && sudo chmod 700 /opt/parallelcluster/createami_scripts) || echo 'No post install script'"
       ]
     },
     {
       "type" : "shell",
       "inline" : [
-        "sudo rm -rf /tmp/* /var/tmp/* && sudo rm -f /root/.ssh/authorized_keys && rm -f ~/.ssh/authorized_keys",
-        "echo aws-parallelcluster-cookbook-{{user `parallelcluster_cookbook_version`}} | sudo tee /opt/parallelcluster/.bootstrapped"
+        "sudo -E rm -rf /tmp/* /var/tmp/* && sudo -E rm -f /root/.ssh/authorized_keys && rm -f ~/.ssh/authorized_keys",
+        "echo aws-parallelcluster-cookbook-{{user `parallelcluster_cookbook_version`}} | sudo -E tee /opt/parallelcluster/.bootstrapped"
       ]
     },
     {
       "type" : "shell",
       "inline" : [
-        "sudo /usr/local/sbin/ami_cleanup.sh"
+        "sudo -E /usr/local/sbin/ami_cleanup.sh"
       ]
     }
   ]
