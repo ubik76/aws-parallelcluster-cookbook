@@ -21,6 +21,8 @@ validate_os_type
 # Validate init system
 raise "Init package #{node['init_package']} not supported." unless node['init_package'] == 'systemd'
 
+include_recipe "aws-parallelcluster-config::mount_home"
+
 # Determine scheduler_slots settings and update instance_slots appropriately
 node.default['cluster']['instance_slots'] = case node['cluster']['scheduler_slots']
                                             when 'vcpus'
