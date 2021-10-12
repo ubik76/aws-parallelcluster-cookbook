@@ -166,7 +166,7 @@
     {
       "type" : "shell",
       "inline" : [
-	"sudo -E ./tmp/firstboot.sh" 
+	"sudo -E sh /tmp/firstboot.sh" 
       ]
     },
     {
