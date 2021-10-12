@@ -160,7 +160,7 @@
   "provisioners" : [
     {
       "type" : "shell",
-      "script" : "script/firstboot.sh"
+      "inline" : [ "sudo -E script/firstboot.sh" ]
     },
     {
       "type" : "shell",
