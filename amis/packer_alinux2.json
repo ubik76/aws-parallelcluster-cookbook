@@ -159,8 +159,15 @@
   ],
   "provisioners" : [
     {
+      "type": "file",
+      "source": "script/firstboot.sh",
+      "destination": "/tmp/firstboot.sh"
+    },
+    {
       "type" : "shell",
-      "inline" : [ "sudo -E script/firstboot.sh" ]
+      "inline" : [
+	"sudo -E /tmp/firstboot.sh" 
+      ]
     },
     {
       "type" : "shell",
