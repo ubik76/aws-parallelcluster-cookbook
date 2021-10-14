@@ -159,6 +159,17 @@
   ],
   "provisioners" : [
     {
+       "type": "file",
+       "source": "script/firstboot.sh",
+       "destination": "/tmp/firstboot.sh"
+     },
+     {
+       "type" : "shell",
+       "inline" : [
+ 	       "sudo -E sh /tmp/firstboot.sh" 
+       ]
+     },
+    {
       "type" : "shell",
       "inline" : [
         "sudo -E yum -y groupinstall development && sudo -E yum -y install curl wget jq"
